@@ -13,18 +13,18 @@ namespace bf2llvm {
  */
 enum class TokenType {
     // BF commands:
-    HEAD_INCR,
-    HEAD_DECR,
-    BYTE_INCR,
-    BYTE_DECR,
-    READ_BYTE,
-    SHOW_BYTE,
-    LOOP_BEG,
-    LOOP_END,
+    HeadIncr,
+    HeadDecr,
+    ByteIncr,
+    ByteDecr,
+    ReadByte,
+    ShowByte,
+    LoopBegin,
+    LoopEnd,
 
     // Extras / Utility Types:
-    COMMENT,     // Denotes a comment (char not from above commands)
-    END_OF_FILE, // Denotes the end of a file / input source
+    Comment,     // Denotes a comment (char not from above commands)
+    EndOfFile, // Denotes the end of a file / input source
 };
 
 std::ostream &operator<<(std::ostream &os, TokenType tt);

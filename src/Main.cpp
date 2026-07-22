@@ -11,7 +11,7 @@ int main() {
 
     do {
         tokens.push_back(lexer.nextToken());
-    } while (tokens.size() > 0 && tokens.back().type != bf2llvm::TokenType::END_OF_FILE);
+    } while (tokens.size() > 0 && tokens.back().type != bf2llvm::TokenType::EndOfFile);
 
     for (auto it = tokens.begin(); it != tokens.end(); ++it) {
         std::cout << *it << std::endl;

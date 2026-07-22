@@ -1,13 +1,15 @@
 #include "Lexer.hpp"
+#include "Token.hpp"
 namespace bf2llvm {
 
 Token Lexer::nextToken() {
+    using enum TokenType;
     // Advance to next character
     skipWhitespace();
 
     // If we're attempting to read OOB, assume that we are at EOF
     if (m_cursor >= m_source.size()) {
-        return {TokenType::END_OF_FILE, {}};
+        return {EndOfFile, {}};
     }
 
     // Get the token that's under the cursor
@@ -15,28 +17,28 @@ Token Lexer::nextToken() {
     switch (m_source[m_cursor]) {
         case '>':
             m_cursor++;
-            return {TokenType::HEAD_INCR, m_source.substr(curr_pos, 1)};
+            return {HeadIncr, m_source.substr(curr_pos, 1)};
         case '<':
             m_cursor++;
-            return {TokenType::HEAD_DECR, m_source.substr(curr_pos, 1)};
+            return {HeadDecr, m_source.substr(curr_pos, 1)};
         case '+':
             m_cursor++;
-            return {TokenType::BYTE_INCR, m_source.substr(curr_pos, 1)};
+            return {ByteIncr, m_source.substr(curr_pos, 1)};
         case '-':
             m_cursor++;
-            return {TokenType::BYTE_DECR, m_source.substr(curr_pos, 1)};
+            return {ByteDecr, m_source.substr(curr_pos, 1)};
         case '.':
             m_cursor++;
-            return {TokenType::SHOW_BYTE, m_source.substr(curr_pos, 1)};
+            return {ShowByte, m_source.substr(curr_pos, 1)};
         case ',':
             m_cursor++;
-            return {TokenType::READ_BYTE, m_source.substr(curr_pos, 1)};
+            return {ReadByte, m_source.substr(curr_pos, 1)};
         case '[':
             m_cursor++;
-            return {TokenType::LOOP_BEG, m_source.substr(curr_pos, 1)};
+            return {LoopBegin, m_source.substr(curr_pos, 1)};
         case ']':
             m_cursor++;
-            return {TokenType::LOOP_END, m_source.substr(curr_pos, 1)};
+            return {LoopEnd, m_source.substr(curr_pos, 1)};
         default:
             // Chars not in above are considered comments, return entire comment
             size_t comment_start {curr_pos};
@@ -45,24 +47,17 @@ Token Lexer::nextToken() {
                 m_cursor++;
                 length++;
             }
-            return {TokenType::COMMENT, m_source.substr(comment_start, length)};
+            return {Comment, m_source.substr(comment_start, length)};
     }
 }
 
 inline bool Lexer::isCommand() {
-    switch (m_source[m_cursor]) {
-        case '>':
-        case '<':
-        case '+':
-        case '-':
-        case '.':
-        case ',':
-        case '[':
-        case ']':
-            return true;
-        default:
-            return false;
+    constexpr char commands[] {'>', '<', '+', '-', '.', ',', '[', ']'};
+    char curr {m_source[m_cursor]};
+    for (char cmd : commands) {
+        if (curr == cmd) return true;
     }
+    return false;
 }
 
 void Lexer::skipWhitespace() {

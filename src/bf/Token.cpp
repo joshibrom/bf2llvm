@@ -8,27 +8,29 @@
 namespace bf2llvm {
 
 std::ostream &operator<<(std::ostream &os, TokenType tt) {
+    using enum TokenType;
+
     switch (tt) {
-        case TokenType::HEAD_INCR:
-            return os << "TokenType::HEAD_INCR";
-        case TokenType::HEAD_DECR:
-            return os << "TokenType::HEAD_DECR";
-        case TokenType::BYTE_INCR:
-            return os << "TokenType::BYTE_INCR";
-        case TokenType::BYTE_DECR:
-            return os << "TokenType::BYTE_DECR";
-        case TokenType::SHOW_BYTE:
-            return os << "TokenType::SHOW_BYTE";
-        case TokenType::READ_BYTE:
-            return os << "TokenType::READ_BYTE";
-        case TokenType::LOOP_BEG:
-            return os << "TokenType::LOOP_BEG";
-        case TokenType::LOOP_END:
-            return os << "TokenType::LOOP_END";
-        case TokenType::COMMENT:
-            return os << "TokenType::COMMENT";
-        case TokenType::END_OF_FILE:
-            return os << "TokenType::END_OF_FILE";
+        case HeadIncr:
+            return os << "HEAD_INCR";
+        case HeadDecr:
+            return os << "HEAD_DECR";
+        case ByteIncr:
+            return os << "BYTE_INCR";
+        case ByteDecr:
+            return os << "BYTE_DECR";
+        case ShowByte:
+            return os << "SHOW_BYTE";
+        case ReadByte:
+            return os << "READ_BYTE";
+        case LoopBegin:
+            return os << "LOOP_BEG";
+        case LoopEnd:
+            return os << "LOOP_END";
+        case Comment:
+            return os << "COMMENT";
+        case EndOfFile:
+            return os << "END_OF_FILE";
     };
 }
 
