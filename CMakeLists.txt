@@ -44,6 +44,8 @@ add_executable(bf2llvm
     ${SRC_DIR}/Main.cpp
 )
 
+target_sources(bf2llvm PRIVATE ${SOURCE_FILES})
+
 # Warnings + Sanitizers
 
 if(UNIX AND NOT APPLE)
