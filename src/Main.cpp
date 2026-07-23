@@ -1,11 +1,19 @@
 #include "bf/Lexer.hpp"
 #include "bf/Token.hpp"
+#include "io/FileHandler.hpp"
 
+#include <filesystem>
 #include <iostream>
 #include <vector>
 
+constexpr char INPUT_FILENAME[] { "../hello-world-commented.bf" };
+
 int main() {
-    bf2llvm::Lexer lexer { {"[->+<] And some test comment"} };
+    // Read the input file
+    // TODO: Make this program take an arg for the input file
+    auto input_content = bf2llvm::read_file(std::filesystem::path{INPUT_FILENAME});
+
+    bf2llvm::Lexer lexer { {input_content} };
 
     std::vector<bf2llvm::Token> tokens;
 
