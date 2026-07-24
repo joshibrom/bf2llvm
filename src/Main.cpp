@@ -1,4 +1,5 @@
 #include "bf/Lexer.hpp"
+#include "bf/Parser.hpp"
 #include "bf/Token.hpp"
 #include "io/FileHandler.hpp"
 
@@ -24,6 +25,8 @@ int main() {
     for (auto it = tokens.begin(); it != tokens.end(); ++it) {
         std::cout << *it << std::endl;
     }
+
+    bf2llvm::Parser parser { tokens };
 
     return 0;
 }
