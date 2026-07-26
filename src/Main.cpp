@@ -28,5 +28,7 @@ int main() {
 
     bf2llvm::Parser parser { tokens };
 
+    auto program = parser.parse();
+
     return 0;
 }
