@@ -14,7 +14,7 @@ std::vector<Node> Parser::parseBody() {
     std::vector<Node> body{};
 
     // Iterate through the tokens, consuming them and building an AST
-    Token token { next() };
+    Token token { m_tokens[m_cursor] };
     while (token.type != TokenType::LoopEnd && token.type != TokenType::EndOfFile) {
         switch (token.type) {
         using enum TokenType;
@@ -31,6 +31,7 @@ std::vector<Node> Parser::parseBody() {
             body.push_back({ bf_node_action::Show{} });
             break;
         case LoopBegin:
+            next();
             body.push_back({ bf_node_action::Loop{ parseBody() } });
             break;
         case LoopEnd:
