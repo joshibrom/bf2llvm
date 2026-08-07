@@ -1,8 +1,11 @@
 #include "Parser.hpp"
 #include "Token.hpp"
 
+#include <iostream>
 #include <optional>
 #include <stdexcept>
+#include <string>
+#include <variant>
 #include <vector>
 
 namespace bf2llvm {
@@ -91,6 +94,45 @@ NodeAction Parser::accumulateAction() {
             // FIXME: Check before even trying to accumulate
             throw std::runtime_error("Action cannot be accumulated");
     }
+}
+
+template<class... Ts>
+struct Overloaded : Ts... {
+    using Ts::operator()...;
+};
+
+template<class... Ts>
+Overloaded(Ts...) -> Overloaded<Ts...>;
+
+void Program::print() const {
+    std::cout << "Program {" << std::endl;
+    for (const auto &n : body) {
+        n.print(1);
+    }
+    std::cout << "}" << std::endl;
+}
+
+void Node::print(size_t level) const {
+    std::string indent(level, '\t');
+    std::cout << indent;
+
+    std::visit(Overloaded{
+        [](const bf_node_action::Move &a) {
+            std::cout << "Move(" << a.by << ")" << std::endl;
+        },
+        [](const bf_node_action::Mutate &a) {
+            std::cout << "Mutate(" << a.by << ")" << std::endl;
+        },
+        [](const bf_node_action::Show &) { std::cout << "Show" << std::endl; },
+        [](const bf_node_action::Read &) { std::cout << "Read" << std::endl; },
+        [level, indent](const bf_node_action::Loop &a) {
+            std::cout << "Loop {" << std::endl;
+            for (const auto &node : a.body) {
+                node.print(level + 1);
+            }
+            std::cout << indent << "}" << std::endl;
+        },
+    }, action);
 }
 
 }

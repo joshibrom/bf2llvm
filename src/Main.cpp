@@ -30,5 +30,7 @@ int main() {
 
     auto program = parser.parse();
 
+    program.print();
+
     return 0;
 }

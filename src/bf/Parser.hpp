@@ -32,6 +32,8 @@ using NodeAction = std::variant < bf_node_action::Mutate, bf_node_action::Move,
 
 struct Node {
     NodeAction action;
+
+    void print(size_t level) const;
 };
 
 /**
@@ -39,6 +41,8 @@ struct Node {
  */
 struct Program {
     std::vector<Node> body;
+
+    void print() const;
 };
 
 
