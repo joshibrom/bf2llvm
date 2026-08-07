@@ -59,7 +59,7 @@ Token Parser::next() {
 
 std::optional<Token> Parser::peek() {
     return m_cursor < m_tokens.size() - 1
-        ? std::optional<Token>{ m_tokens[m_cursor] }
+        ? std::optional<Token>{ m_tokens[m_cursor + 1] }
         : std::nullopt;
 }
 
@@ -68,16 +68,18 @@ NodeAction Parser::accumulateAction() {
         throw std::runtime_error("Out of bounds"); // TODO: Make better message
 
     Token token {m_tokens[m_cursor]};
-    int n{0};
+    int delta {
+        token.type == TokenType::ByteIncr || token.type == TokenType::HeadIncr
+            ? 1
+            : -1
+    };
+    int n{delta};
 
     std::optional<Token> next_token { peek() };
 
     while (next_token.has_value() &&
            next_token.value().type == token.type) {
-      n +=
-          token.type == TokenType::ByteIncr || token.type == TokenType::HeadIncr
-          ? 1
-          : -1;
+      n += delta;
       next(); // Consume current token & move forward
       next_token = peek();
     }
