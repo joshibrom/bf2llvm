@@ -38,6 +38,17 @@ endforeach()
 
 list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
+# Find LLVM 18
+find_package(LLVM REQUIRED CONFIG)
+
+message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+
+# Map LLVM components to library variables
+# 'core' provides Module.h, IRBuilder.h, etc.
+# 'support' provides raw_ostream, Error handling, etc.
+llvm_map_components_to_libnames(llvm_libs support core)
+
 # Main executable
 
 add_executable(bf2llvm
@@ -45,6 +56,16 @@ add_executable(bf2llvm
 )
 
 target_sources(bf2llvm PRIVATE ${SOURCE_FILES})
+
+# Include LLVM headers
+target_include_directories(bf2llvm PRIVATE ${LLVM_INCLUDE_DIRS})
+
+# Add LLVM compile definitions (e.g., _GNU_SOURCE, version macros)
+separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+target_compile_definitions(bf2llvm PRIVATE ${LLVM_DEFINITIONS_LIST})
+
+# Link LLVM libraries
+target_link_libraries(bf2llvm PRIVATE ${llvm_libs})
 
 # Warnings + Sanitizers
 
